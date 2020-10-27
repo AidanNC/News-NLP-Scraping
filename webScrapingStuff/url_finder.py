@@ -9,15 +9,15 @@ contents = page.content
 all_urls = []
 bad_urls = []
 
-regex = "/article/us"
-url = 'https://www.reuters.com/article/us-usa-election-biden-unions/two-largest-u-s-airline-flight-attendant-unions-endorse-biden-idUSKBN27C2VY'
+regex = "^https://www.politico.com/news/.*2020/"
+url = 'https://www.politico.com/news/2020/10/26/supreme-court-wont-extend-wisconsin-ballot-deadline-432656'
 depth = 0
 def link_stem_finder(url, regex, depth, add_link = True):
     #make sure that this url is accounted for
     if add_link:
         all_urls.append(url)
     print(len(all_urls))
-    if depth > 2 or len(all_urls) > 1000:
+    if depth > 25 or len(all_urls) > 1000:
         return
     page = requests.get(url)
     contents = page.content
@@ -33,6 +33,15 @@ def link_stem_finder(url, regex, depth, add_link = True):
                 except:
                     bad_urls.append(link['href'])
 
+
+def politico_cleanup():
+    returner = []
+    regex = "^https://www.politico.com/news/.*/2020/"
+    #this is because it gets a lot of useless links
+    for url in all_urls:
+        if re.search(regex,url):
+            returner.append(url)
+    return returner
 def custom_reuters():
     #reters articles don't really link to each other, so the recursive approach doesn't work, lets try this
     regex = "/article/us"
@@ -57,19 +66,46 @@ def custom_reuters():
         if len(all_urls) > 1000:
             return
 
+def custom_politico():
+    #reters articles don't really link to each other, so the recursive approach doesn't work, lets try this
+    regex = "^https://www\.politico\.com/news/.*2020/"
+    for i in range(1,100):
+        for stem in ["https://www.politico.com/white-house/","https://www.politico.com/congress/"]:
+            url =  stem + str(i)
+            page = requests.get(url)
+            contents = page.content
+
+            soup = BeautifulSoup(contents, 'html.parser')
+            links = soup.findAll('div',{"class": 'summary'})
+            temp_links = []
+            for link in links:
+                temp_links += link.findAll('a')
+            links = temp_links
+            for link in links:
+                if link.has_attr('href') and re.search(regex,link['href']):
+                    #print("page: " + str(i))
+                    #print(link['href'])
+                    if link['href'] not in all_urls:
+                        all_urls.append(link['href'])
+                        print(len(all_urls))
+            if len(all_urls) > 1000:
+                return
 
 
-custom_reuters()
+#custom_reuters()
 #reuters_one_page()
 
 #link_stem_finder(url,regex,depth)
-if True:
+#all_urls = politico_cleanup()
+
+custom_politico()
+if False:
     for url in all_urls:
         print(url)
         print()
 print(len(all_urls))
 
-if False:
-    file = open('website_urls/reuters_urls.txt','w')
+if True:
+    file = open('website_urls/politico_urls.txt','w')
     for url in all_urls:
-        file.write('https://www.reuters.com' + url + '\n')
+        file.write(url + '\n')
