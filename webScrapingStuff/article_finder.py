@@ -6,6 +6,7 @@ url = 'https://www.foxnews.com/politics/supreme-court-strikes-down-state-ban-on-
 url_nyt = 'https://www.nytimes.com/2020/10/26/us/politics/trump-barrett.html'
 url_usatoday = 'https://www.usatoday.com/story/news/politics/2020/10/27/cincinnati-columbus-lawsuit-seek-overturn-house-bill-6-bailout-tax/3748629001/'
 url_reuters = 'https://www.reuters.com/article/us-usa-election-pence/political-adviser-sparked-covid-19-outbreak-on-vice-president-pence-team-sources-idUSKBN27C2X5'
+url_politico = 'https://www.politico.com/news/2020/10/27/no-apologies-mcconnell-says-barrett-a-huge-success-for-the-country-432828'
 
 def getArticle(url, site):
     page = requests.get(url)
@@ -50,6 +51,19 @@ def getArticle(url, site):
             temp = paragraph.getText()
             returner += temp + " " 
         return returner
+
+    if (site == 'politico'):
+
+        storytexts = soup.findAll('div', {"class": 'story-text'})
+        returner = ""
+        for storytext in storytexts:
+            #paragraphs = storytext.findAll('p')
+            paragraphs = storytext.findAll('p', {"class": 'story-text__paragraph'})
+            for paragraph in paragraphs:
+                temp = paragraph.getText()
+                returner += temp + " " 
+        
+        return returner
     # paragraphs = soup.findAll("div",{"class": html_class})
     # this is the basic format of returning the paragarphs
     '''
@@ -62,5 +76,6 @@ def getArticle(url, site):
 #print(getArticle(url,'fox'))
 #print(getArticle(url_nyt, 'nyt'))
 #print(getArticle(url_usatoday, 'usatoday'))
-print(getArticle(url_reuters, 'reuters'))
+#print(getArticle(url_reuters, 'reuters'))
+print(getArticle(url_politico, 'politico'))
 # getArticle(url,'fox')
