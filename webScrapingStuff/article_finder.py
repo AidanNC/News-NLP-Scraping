@@ -3,7 +3,8 @@ from bs4 import BeautifulSoup
 
 
 url = 'https://www.foxnews.com/politics/supreme-court-strikes-down-state-ban-on-taxpayer-funding-for-religious-schools'
-urlNYT = 'https://www.nytimes.com/2020/10/26/us/politics/trump-barrett.html'
+url_nyt = 'https://www.nytimes.com/2020/10/26/us/politics/trump-barrett.html'
+url_usatoday = 'https://www.usatoday.com/story/news/politics/2020/10/27/cincinnati-columbus-lawsuit-seek-overturn-house-bill-6-bailout-tax/3748629001/'
 
 
 def getArticle(url, site):
@@ -31,6 +32,16 @@ def getArticle(url, site):
             temp = paragraph.getText()
             returner += temp + " " 
         return returner
+
+    if (site == 'usatoday'):
+        paragraphs = soup.find('div', {"class": 'gnt_ar_b'}).findAll('p')
+        returner = ""
+        for paragraph in paragraphs:
+            temp = paragraph.getText()
+            #filter out bold
+            if not paragraph.find('strong'):
+                returner += temp + " "
+        return returner
     # paragraphs = soup.findAll("div",{"class": html_class})
     # this is the basic format of returning the paragarphs
     '''
@@ -41,5 +52,6 @@ def getArticle(url, site):
     '''
 
 #print(getArticle(url,'fox'))
-print(getArticle(urlNYT, 'nyt'))
+#print(getArticle(url_nyt, 'nyt'))
+print(getArticle(url_usatoday, 'usatoday'))
 # getArticle(url,'fox')
