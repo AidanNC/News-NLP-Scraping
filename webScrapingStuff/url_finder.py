@@ -9,8 +9,9 @@ contents = page.content
 all_urls = []
 bad_urls = []
 
-regex = "^https://www.politico.com/news/.*2020/"
-url = 'https://www.politico.com/news/2020/10/26/supreme-court-wont-extend-wisconsin-ballot-deadline-432656'
+#regex = "www\.latimes\.com/politics/story"
+regex = "www\.breitbart\.com/politics|^/politics"
+url = '/politics/2020/10/27/donald-trump-does-laps-presidential-limo-wisconsin-racetrack/'
 depth = 0
 def link_stem_finder(url, regex, depth, add_link = True):
     #make sure that this url is accounted for
@@ -26,6 +27,8 @@ def link_stem_finder(url, regex, depth, add_link = True):
 
     links = soup.findAll('a')
     for link in links:
+        #if link.has_attr('href'):
+            #print(link['href'])
         if link.has_attr('href') and re.search(regex,link['href']):
             if link['href'] not in all_urls and link['href'] not in bad_urls:
                 try:
@@ -33,15 +36,42 @@ def link_stem_finder(url, regex, depth, add_link = True):
                 except:
                     bad_urls.append(link['href'])
 
+npr_good_links = []
+def npr_stem_finder(url, regex, depth, add_link = True):
+    page = requests.get(url)
+    contents = page.content
 
-def politico_cleanup():
-    returner = []
-    regex = "^https://www.politico.com/news/.*/2020/"
-    #this is because it gets a lot of useless links
-    for url in all_urls:
-        if re.search(regex,url):
-            returner.append(url)
-    return returner
+    soup = BeautifulSoup(contents, 'html.parser')
+    #see if it is a political article
+    temp = soup.find('h3',{"class": 'slug'}).getText()
+    print(temp)
+    #make sure that this url is accounted for
+    if add_link:
+        if temp.strip() in ["Law", "Politics", "Elections"]:
+            npr_good_links.append(url)
+        all_urls.append(url)
+    print("good links: " + str(len(npr_good_links)))
+    #print("all urls: " + str(len(all_urls)))
+
+
+    if depth > 10 or len(npr_good_links) > 1000:
+        return
+    
+
+    links = soup.findAll('div',{"class": 'recommended-story__info'})
+    temp_links = []
+    print(links)
+    for link in links:
+        temp_links += link.findAll('a')
+    links = temp_links
+    for link in links:
+        if link.has_attr('href') and re.search(regex,link['href']):
+            if link['href'] not in all_urls and link['href'] not in bad_urls:
+                try:
+                    npr_stem_finder(link['href'],regex, depth+1)
+                except:
+                    bad_urls.append(link['href'])
+
 def custom_reuters():
     #reters articles don't really link to each other, so the recursive approach doesn't work, lets try this
     regex = "/article/us"
@@ -91,6 +121,29 @@ def custom_politico():
             if len(all_urls) > 1000:
                 return
 
+def custom_breitbart():
+    regex = "www\.breitbart\.com/politics|^/politics"
+    for i in range(1,200):
+        for stem in ["https://www.breitbart.com/politics/page/"]:
+            url =  stem + str(i)
+            page = requests.get(url)
+            contents = page.content
+
+            soup = BeautifulSoup(contents, 'html.parser')
+            links = soup.findAll('article')
+            temp_links = []
+            for link in links:
+                temp_links += link.findAll('a')
+            links = temp_links
+            for link in links:
+                if link.has_attr('href') and re.search(regex,link['href']):
+                    #print("page: " + str(i))
+                    #print(link['href'])
+                    if link['href'] not in all_urls:
+                        all_urls.append(link['href'])
+                        print(len(all_urls))
+            if len(all_urls) > 1000:
+                return
 
 #custom_reuters()
 #reuters_one_page()
@@ -98,7 +151,10 @@ def custom_politico():
 #link_stem_finder(url,regex,depth)
 #all_urls = politico_cleanup()
 
-custom_politico()
+#custom_politico()
+#npr_stem_finder(url,regex,depth)
+
+custom_breitbart()
 if False:
     for url in all_urls:
         print(url)
@@ -106,6 +162,6 @@ if False:
 print(len(all_urls))
 
 if True:
-    file = open('website_urls/politico_urls.txt','w')
+    file = open('website_urls/breitbart_urls.txt','w')
     for url in all_urls:
-        file.write(url + '\n')
+        file.write('https://www.breitbart.com'+ str(url) + '\n')
