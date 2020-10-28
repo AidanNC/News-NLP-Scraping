@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 
 #CNN
 #New York Times
-#Huffington Post
+#--Huffington Post
 #Fox News
 #USA Today
 #Reuters US news
@@ -22,6 +22,8 @@ url_reuters = 'https://www.reuters.com/article/us-usa-election-pence/political-a
 url_politico = 'https://www.politico.com/news/2020/10/27/no-apologies-mcconnell-says-barrett-a-huge-success-for-the-country-432828'
 url_yahoo = 'https://news.yahoo.com/wisconsin-decision-supreme-court-foreshadows-020446094.html'
 url_yahoo2 = 'https://news.yahoo.com/i-purely-vote-for-my-actual-interests-black-men-could-be-critical-bloc-in-presidential-election-174237805.html'
+url_breitbart = 'https://www.breitbart.com/radio/2020/10/08/greg-pence-biden-harris-raise-taxes-defund-police-eliminate-2a-open-borders-green-new-deal/'
+
 
 def getArticle(url, site):
     page = requests.get(url)
@@ -103,6 +105,17 @@ def getArticle(url, site):
             if (not temp == 'Read more from Yahoo News:' and temp not in link_bullet):
                 returner += temp + " " 
         return returner
+
+    if (site == 'breitbart'):
+        paragraphs = soup.find('div', {"class": 'entry-content'}).findAll('p')
+        returner = ""
+        for paragraph in paragraphs:
+            temp = paragraph.getText()
+            returner += temp + " " 
+        return returner
+
+
+
     # paragraphs = soup.findAll("div",{"class": html_class})
     # this is the basic format of returning the paragarphs
     '''
@@ -118,5 +131,6 @@ def getArticle(url, site):
 #print(getArticle(url_reuters, 'reuters'))
 #print(getArticle(url_politico, 'politico'))
 #print(getArticle(url_yahoo2, 'yahoo'))
-print(getArticle(url_cnn, 'cnn'))
+#print(getArticle(url_cnn, 'cnn'))
+print(getArticle(url_breitbart, 'breitbart'))
 
