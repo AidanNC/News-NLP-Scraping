@@ -8,7 +8,10 @@ USA today:
 www\.usatoday\.com/story/.*/politics/
 Reuters:
 /article/us
-Use the custom reuters function.
-
+Use the custom reuters function. and add 'https://www.reuters.com'
+Politico
+use the custom politico function
+Breitbart
+use the custom function and add 'https://www.breitbart.com'
 
 

@@ -10,15 +10,15 @@ all_urls = []
 bad_urls = []
 
 #regex = "www\.latimes\.com/politics/story"
-regex = "www\.breitbart\.com/politics|^/politics"
-url = '/politics/2020/10/27/donald-trump-does-laps-presidential-limo-wisconsin-racetrack/'
+regex = "https://www.foxnews.com/politics"
+url = 'https://www.foxnews.com/politics/mcconnell-urges-white-house-not-to-make-coronavirus-deal-with-pelosi'
 depth = 0
 def link_stem_finder(url, regex, depth, add_link = True):
     #make sure that this url is accounted for
     if add_link:
         all_urls.append(url)
     print(len(all_urls))
-    if depth > 25 or len(all_urls) > 1000:
+    if depth > 100 or len(all_urls) > 2500:
         return
     page = requests.get(url)
     contents = page.content
@@ -162,6 +162,6 @@ if False:
 print(len(all_urls))
 
 if True:
-    file = open('website_urls/breitbart_urls.txt','w')
+    file = open('website_urls/fox_urls_big.txt','w')
     for url in all_urls:
-        file.write('https://www.breitbart.com'+ str(url) + '\n')
+        file.write(str(url) + '\n')

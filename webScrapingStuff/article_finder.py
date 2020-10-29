@@ -92,6 +92,12 @@ def getArticle(url, site):
             if (not temp == 'Read more from Yahoo News:' and temp not in link_bullet):
                 returner += temp + " " 
         return returner
+    if (site == 'cnn'):
+        paragraphs = soup.findAll("div",{"class": "zn-body__paragraph"})
+        returner = ""
+        for val in paragraphs:
+            returner += val.getText() + " " 
+        return returner
     # paragraphs = soup.findAll("div",{"class": html_class})
     # this is the basic format of returning the paragarphs
     '''
