@@ -5,7 +5,7 @@ Just use sitemap. or www\.cnn\.com.*/politics/
 NYT:
 "www\.nytimes\.com.*/politics/.*html$"
 USA today:
-www\.usatoday\.com/story/.*/politics/
+www\.usatoday\.com/story/.*politics/
 Reuters:
 /article/us
 Use the custom reuters function. and add 'https://www.reuters.com'

@@ -1,8 +1,8 @@
 import re
 
-txt = "https://www.politico.com/news/2020/10/26/in-wisconsin-ruling-supreme-court-foreshadows-election-night-cliffhanger-432725"
+txt = "https://www.usatoday.com/story/news/politics/2020/10/28/president-donald-trump-anthony-fauci-timeline-relationship-coronavirus-pandemic/3718797001/"
 
-regex = "^https://www\.politico\.com/news/.*2020/"
+regex = "www\.usatoday\.com/story/.*politics/"
 
 x = re.search(regex,txt)
 
