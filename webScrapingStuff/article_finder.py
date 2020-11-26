@@ -30,14 +30,16 @@ def getArticle(url, site):
     contents = page.content
     soup = BeautifulSoup(contents, 'html.parser')
     if (site == 'cnn'):
-        #paragraphs = soup.find('div', {"class": 'l-container'}).findAll('div', {"class:" 'zn-body__paragraph'})
-        #Doesn't get the very first paragraph hmm
+        #Get title
+        title = soup.find("div",{"class": "l-container"}).find("h1",{"class": "pg-headline"}).getText()
+
+        #Get article
         paragraphs = soup.findAll("div",{"class": "zn-body__paragraph"})
         returner = ""
         for paragraph in paragraphs:
             temp = paragraph.getText()
             returner += temp + " " 
-        return returner
+        return (title, returner)
     if(site == 'fox'):
         paragraphs = soup.find('div', {"class": 'article-body'}).findAll('p')
         bad_paragraphs = soup.find('div', {"class": 'article-body'}).findAll(href=True)
@@ -131,6 +133,6 @@ def getArticle(url, site):
 #print(getArticle(url_reuters, 'reuters'))
 #print(getArticle(url_politico, 'politico'))
 #print(getArticle(url_yahoo2, 'yahoo'))
-#print(getArticle(url_cnn, 'cnn'))
-print(getArticle(url_breitbart, 'breitbart'))
+print(getArticle(url_cnn, 'cnn')[0])
+#print(getArticle(url_breitbart, 'breitbart'))
 
