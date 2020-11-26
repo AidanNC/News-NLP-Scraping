@@ -36,9 +36,8 @@ def getArticle(url, site):
         #Get article
         paragraphs = soup.findAll("div",{"class": "zn-body__paragraph"})
         returner = ""
-        for paragraph in paragraphs:
-            temp = paragraph.getText()
-            returner += temp + " " 
+        for val in paragraphs:
+            returner += val.getText() + " "
         return (title, returner)
     if(site == 'fox'):
         #Get title
@@ -157,6 +156,6 @@ def getArticle(url, site):
 #print(getArticle(url_reuters, 'reuters')[0])
 #print(getArticle(url_politico, 'politico')[0])
 #print(getArticle(url_yahoo2, 'yahoo')[0])
-#print(getArticle(url_cnn, 'cnn')[0])
+print(getArticle(url_cnn, 'cnn')[0])
 #print(getArticle(url_breitbart, 'breitbart')[0])
 
