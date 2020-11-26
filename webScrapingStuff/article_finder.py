@@ -41,6 +41,9 @@ def getArticle(url, site):
             returner += temp + " " 
         return (title, returner)
     if(site == 'fox'):
+        #Get title
+        title = soup.find('h1', {"class": 'headline'}).getText()
+        #Get article
         paragraphs = soup.find('div', {"class": 'article-body'}).findAll('p')
         bad_paragraphs = soup.find('div', {"class": 'article-body'}).findAll(href=True)
 
@@ -52,17 +55,24 @@ def getArticle(url, site):
             temp = paragraph.getText()
             if temp not in bad_paragraphs:
                 returner += temp + " "
-        return returner
+        return (title, returner)
 
     if (site == 'nyt'):
+        #Get title
+        title = soup.find('h1', {"itemprop": 'headline'}).getText()
+        #Get article
+
         paragraphs = soup.find('section', {"name": 'articleBody'}).findAll('p')
         returner = ""
         for paragraph in paragraphs:
             temp = paragraph.getText()
             returner += temp + " " 
-        return returner
+        return (title, returner)
 
     if (site == 'usatoday'):
+        #Get title
+        title = soup.find('h1', {"class": 'gnt_ar_hl'}).getText()
+        #Get article
         paragraphs = soup.find('div', {"class": 'gnt_ar_b'}).findAll('p')
         returner = ""
         for paragraph in paragraphs:
@@ -70,18 +80,24 @@ def getArticle(url, site):
             #filter out bold
             if not paragraph.find('strong'):
                 returner += temp + " "
-        return returner
+        return (title, returner)
 
     if (site == 'reuters'):
+        #Get title
+        title = soup.find('h1', {"class": 'Headline-headline-2FXIq'}).getText()
+        #Get article
         paragraphs = soup.find('div', {"class": 'ArticleBodyWrapper'}).findAll('p')
         returner = ""
         for paragraph in paragraphs:
             temp = paragraph.getText()
             returner += temp + " " 
-        return returner
+        return (title, returner)
 
     if (site == 'politico'):
 
+        #Get title
+        title = soup.find('h2', {"class": 'headline'}).getText()
+        #Get article
         storytexts = soup.findAll('div', {"class": 'story-text'})
         returner = ""
         for storytext in storytexts:
@@ -91,12 +107,17 @@ def getArticle(url, site):
                 temp = paragraph.getText()
                 returner += temp + " " 
         
-        return returner
+        return (title, returner)
 
     if (site == 'yahoo'):
-        paragraphs = soup.find('article', {"itemprop": 'articleBody'}).findAll('p')
-        link_bullet = soup.find('article', {"itemprop": 'articleBody'}).findAll(href=True)
+        #Get title
+        title = soup.find('h1', {"data-test-locator": 'headline'}).getText()
+        #Get article
+        #paragraphs = soup.find('article', {"itemprop": 'articleBody'}).findAll('p')
+        #link_bullet = soup.find('article', {"itemprop": 'articleBody'}).findAll(href=True)
 
+        paragraphs = soup.find('div', {"class": 'caas-body'}).findAll('p')
+        link_bullet = soup.find('div', {"class": 'caas-body'}).findAll(href=True)
         returner = ""
         for i in range(0, len(link_bullet)):
             link_bullet[i] = link_bullet[i].getText()
@@ -106,15 +127,18 @@ def getArticle(url, site):
             #remove 'Read more from Yahoo News:' plus links at the end of yahoo original articles
             if (not temp == 'Read more from Yahoo News:' and temp not in link_bullet):
                 returner += temp + " " 
-        return returner
+        return (title, returner)
 
     if (site == 'breitbart'):
+        #Get title
+        title = soup.find('article', {"class": 'the-article'}).find('header').find('h1').getText()
+        #Get article
         paragraphs = soup.find('div', {"class": 'entry-content'}).findAll('p')
         returner = ""
         for paragraph in paragraphs:
             temp = paragraph.getText()
             returner += temp + " " 
-        return returner
+        return (title, returner)
 
 
 
@@ -127,12 +151,12 @@ def getArticle(url, site):
     return returner
     '''
 
-#print(getArticle(url_fox,'fox'))
-#print(getArticle(url_nyt, 'nyt'))
-#print(getArticle(url_usatoday, 'usatoday'))
-#print(getArticle(url_reuters, 'reuters'))
-#print(getArticle(url_politico, 'politico'))
-#print(getArticle(url_yahoo2, 'yahoo'))
-print(getArticle(url_cnn, 'cnn')[0])
-#print(getArticle(url_breitbart, 'breitbart'))
+#print(getArticle(url_fox,'fox')[0])
+#print(getArticle(url_nyt, 'nyt')[0])
+#print(getArticle(url_usatoday, 'usatoday')[0])
+#print(getArticle(url_reuters, 'reuters')[0])
+#print(getArticle(url_politico, 'politico')[0])
+#print(getArticle(url_yahoo2, 'yahoo')[0])
+#print(getArticle(url_cnn, 'cnn')[0])
+#print(getArticle(url_breitbart, 'breitbart')[0])
 
