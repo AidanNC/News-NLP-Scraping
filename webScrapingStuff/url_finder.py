@@ -10,8 +10,8 @@ all_urls = []
 bad_urls = []
 
 #regex = "www\.latimes\.com/politics/story"
-regex = "https://www.foxnews.com/politics"
-url = 'https://www.foxnews.com/politics/mcconnell-urges-white-house-not-to-make-coronavirus-deal-with-pelosi'
+regex = "/policy"
+url = 'https://thehill.com/policy/transportation/527581-airlines-set-sights-on-digital-passports-for-covid-19-vaccine?utm_source=thehill&utm_medium=widgets&utm_campaign=es_recommended_content'
 depth = 0
 def link_stem_finder(url, regex, depth, add_link = True):
     #make sure that this url is accounted for
@@ -145,6 +145,29 @@ def custom_breitbart():
             if len(all_urls) > 1000:
                 return
 
+def custom_the_hill():
+    regex = "/policy.*-.*"
+    for i in range(1,200):
+        for stem in ["https://thehill.com/policy?page="]:
+            url =  stem + str(i)
+            page = requests.get(url)
+            contents = page.content
+
+            soup = BeautifulSoup(contents, 'html.parser')
+            links = soup.findAll('article')
+            temp_links = []
+            for link in links:
+                temp_links += link.findAll('a')
+            links = temp_links
+            for link in links:
+                if link.has_attr('href') and re.search(regex,link['href']):
+                    #print("page: " + str(i))
+                    #print(link['href'])
+                    if link['href'] not in all_urls:
+                        all_urls.append(link['href'])
+                        print(len(all_urls))
+            if len(all_urls) > 1000:
+                return
 #custom_reuters()
 #reuters_one_page()
 
@@ -154,14 +177,16 @@ def custom_breitbart():
 #custom_politico()
 #npr_stem_finder(url,regex,depth)
 
-custom_breitbart()
-if False:
+#custom_breitbart()
+
+custom_the_hill()
+if True:
     for url in all_urls:
         print(url)
         print()
 print(len(all_urls))
 
-if True:
+if False:
     file = open('website_urls/fox_urls_big.txt','w')
     for url in all_urls:
         file.write(str(url) + '\n')
