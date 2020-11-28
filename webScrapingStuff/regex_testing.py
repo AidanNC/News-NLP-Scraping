@@ -1,8 +1,8 @@
 import re
 
-txt = "https://thehill.com/policy/transportation/aviation"
+txt = "https://www.washingtontimes.com/news/2020/nov/28/obama-cia-chief-brennan-condemns-iranian-scientist/"
 
-regex = "/policy.*-.*"
+regex = "washingtontimes\.com/news/2020"
 
 x = re.search(regex,txt)
 

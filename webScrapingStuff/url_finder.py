@@ -10,8 +10,8 @@ all_urls = []
 bad_urls = []
 
 #regex = "www\.latimes\.com/politics/story"
-regex = "/policy"
-url = 'https://thehill.com/policy/transportation/527581-airlines-set-sights-on-digital-passports-for-covid-19-vaccine?utm_source=thehill&utm_medium=widgets&utm_campaign=es_recommended_content'
+regex = "/news/2020"
+url = 'https://www.washingtontimes.com/news/2020/nov/27/far-left-pressures-biden-administration-picks/'
 depth = 0
 def link_stem_finder(url, regex, depth, add_link = True):
     #make sure that this url is accounted for
@@ -171,6 +171,30 @@ def custom_the_hill():
 #custom_reuters()
 #reuters_one_page()
 
+def custom_epoch_times():
+    regex = "theepochtimes.com/"
+    for i in range(2,200):
+        for stem in ["https://www.theepochtimes.com/c-us-politics/3"]:
+            url =  stem + str(i)
+            page = requests.get(url)
+            contents = page.content
+            print('page: ' + url)
+            soup = BeautifulSoup(contents, 'html.parser')
+            links = soup.findAll('div',{"class": 'title'})
+            temp_links = []
+            for link in links:
+                temp_links += link.findAll('a')
+            links = temp_links
+            for link in links:
+                #print(link)
+                if link.has_attr('href') and re.search(regex,link['href']):
+                    #print("page: " + str(i))
+                    #print(link['href'])
+                    if link['href'] not in all_urls:
+                        all_urls.append(link['href'])
+                        print(len(all_urls))
+            if len(all_urls) > 1000:
+                return
 #link_stem_finder(url,regex,depth)
 #all_urls = politico_cleanup()
 
@@ -179,7 +203,11 @@ def custom_the_hill():
 
 #custom_breitbart()
 
-custom_the_hill()
+#ustom_the_hill()
+
+custom_epoch_times()
+
+
 if True:
     for url in all_urls:
         print(url)
