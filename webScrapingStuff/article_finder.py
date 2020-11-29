@@ -23,7 +23,8 @@ url_politico = 'https://www.politico.com/news/2020/10/27/no-apologies-mcconnell-
 url_yahoo = 'https://news.yahoo.com/wisconsin-decision-supreme-court-foreshadows-020446094.html'
 url_yahoo2 = 'https://news.yahoo.com/i-purely-vote-for-my-actual-interests-black-men-could-be-critical-bloc-in-presidential-election-174237805.html'
 url_breitbart = 'https://www.breitbart.com/radio/2020/10/08/greg-pence-biden-harris-raise-taxes-defund-police-eliminate-2a-open-borders-green-new-deal/'
-
+url_thehill = 'https://thehill.com/homenews/campaign/527832-https-covidtrackingcom-data'
+url_epochtimes = ''
 
 def getArticle(url, site):
     page = requests.get(url)
@@ -139,6 +140,35 @@ def getArticle(url, site):
             returner += temp + " " 
         return (title, returner)
 
+    if (site == 'thehill'):
+        #Get title
+        title = soup.find('h1', {"class": 'title'}).getText()
+        #Get article
+        paragraphs = soup.find('div', {"class": 'field-item'}).findAll('p')
+        returner = ""
+        for paragraph in paragraphs:
+            #Find and replace annoying link hovers
+            spans = paragraph.findAll('span')
+            for span in spans:
+                #replace with link text
+                a = span.find('a')
+                if a is not None:
+                    span.replace_with(a.getText())
+            temp = paragraph.getText()
+            returner += temp + " " 
+        return (title, returner)
+
+    if (site == 'epochtimes'):
+        #Get title
+        #title = soup.find('article', {"class": 'the-article'}).find('header').find('h1').getText()
+        #Get article
+        #paragraphs = soup.find('div', {"class": 'entry-content'}).findAll('p')
+        #returner = ""
+        #for paragraph in paragraphs:
+            #temp = paragraph.getText()
+            #returner += temp + " " 
+        #return (title, returner)
+
 
 
     # paragraphs = soup.findAll("div",{"class": html_class})
@@ -156,6 +186,8 @@ def getArticle(url, site):
 #print(getArticle(url_reuters, 'reuters')[0])
 #print(getArticle(url_politico, 'politico')[0])
 #print(getArticle(url_yahoo2, 'yahoo')[0])
-print(getArticle(url_cnn, 'cnn')[0])
+#print(getArticle(url_cnn, 'cnn')[0])
 #print(getArticle(url_breitbart, 'breitbart')[0])
+print(getArticle(url_thehill, 'thehill')[1])
+#print(getArticle(url_epochtimes, 'epochtimes')[0])
 
