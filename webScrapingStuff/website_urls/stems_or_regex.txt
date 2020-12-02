@@ -13,5 +13,6 @@ Politico
 use the custom politico function
 Breitbart
 use the custom function and add 'https://www.breitbart.com'
-
+OAN
+use the generic function and then the clean oan function to get rid of junk links
 
