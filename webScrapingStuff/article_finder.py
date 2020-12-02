@@ -25,7 +25,7 @@ url_yahoo2 = 'https://news.yahoo.com/i-purely-vote-for-my-actual-interests-black
 url_breitbart = 'https://www.breitbart.com/radio/2020/10/08/greg-pence-biden-harris-raise-taxes-defund-police-eliminate-2a-open-borders-green-new-deal/'
 url_thehill = 'https://thehill.com/homenews/campaign/527832-https-covidtrackingcom-data'
 url_epochtimes = ''
-
+url_oan = 'https://www.oann.com/freecast-adds-oan-and-awe-encore-to-selecttv-through-deal-with-herring-networks/'
 def getArticle(url, site):
     page = requests.get(url)
     contents = page.content
@@ -157,8 +157,19 @@ def getArticle(url, site):
             temp = paragraph.getText()
             returner += temp + " " 
         return (title, returner)
+    
+    if (site == 'oan'):
+        #get title
+        title = soup.find('h1', {'class': 'entry-title'}).getText()
+        #get article
+        paragraphs = soup.find('div', {'class': 'entry-content'}).findAll('p')
+        returner = ""
+        for paragraph in paragraphs:
+            temp = paragraph.getText()
+            returner += temp + " " 
+        return (title, returner)
 
-    if (site == 'epochtimes'):
+    #if (site == 'epochtimes'):
         #Get title
         #title = soup.find('article', {"class": 'the-article'}).find('header').find('h1').getText()
         #Get article
@@ -188,6 +199,10 @@ def getArticle(url, site):
 #print(getArticle(url_yahoo2, 'yahoo')[0])
 #print(getArticle(url_cnn, 'cnn')[0])
 #print(getArticle(url_breitbart, 'breitbart')[0])
-print(getArticle(url_thehill, 'thehill')[1])
+#print(getArticle(url_thehill, 'thehill')[1])
+
 #print(getArticle(url_epochtimes, 'epochtimes')[0])
+print(getArticle(url_oan, 'oan')[0])
+print()
+print(getArticle(url_oan, 'oan')[1])
 
