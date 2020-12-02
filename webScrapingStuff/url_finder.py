@@ -10,15 +10,15 @@ all_urls = []
 bad_urls = []
 
 #regex = "www\.latimes\.com/politics/story"
-regex = "/news/2020"
-url = 'https://www.washingtontimes.com/news/2020/nov/27/far-left-pressures-biden-administration-picks/'
+regex = "oann.com/.*-"
+url = 'https://www.oann.com/president-trumps-must-read-article-outlines-bidens-peculiar-election-performance/'
 depth = 0
 def link_stem_finder(url, regex, depth, add_link = True):
     #make sure that this url is accounted for
     if add_link:
         all_urls.append(url)
     print(len(all_urls))
-    if depth > 100 or len(all_urls) > 2500:
+    if depth > 100 or len(all_urls) > 20:
         return
     page = requests.get(url)
     contents = page.content
@@ -195,7 +195,16 @@ def custom_epoch_times():
                         print(len(all_urls))
             if len(all_urls) > 1000:
                 return
-#link_stem_finder(url,regex,depth)
+
+def clean_oan(all_links):
+    returner = []
+    for val in all_links:
+        if 'tag' not in val and 'category' not in val and 'oan' not in val[17:] and 'one-america-news' not in val[17:]:
+            returner.append(val)
+
+    return returner
+
+link_stem_finder(url,regex,depth)
 #all_urls = politico_cleanup()
 
 #custom_politico()
@@ -205,9 +214,9 @@ def custom_epoch_times():
 
 #ustom_the_hill()
 
-custom_epoch_times()
+#custom_epoch_times()
 
-
+all_urls = clean_oan(all_urls)
 if True:
     for url in all_urls:
         print(url)
